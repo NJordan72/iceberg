@@ -24,6 +24,8 @@ import com.netflix.iceberg.types.TypeUtil;
 import com.netflix.iceberg.types.Types;
 import javafx.animation.KeyValue;
 import org.apache.avro.JsonProperties;
+import org.apache.avro.LogicalType;
+import org.apache.avro.LogicalTypes;
 import org.apache.avro.Schema;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,21 @@ public class AvroSchemaUtil {
   public static Schema buildAvroProjection(Schema schema, com.netflix.iceberg.Schema expected,
                                            Map<String, String> renames) {
     return AvroCustomOrderSchemaVisitor.visit(schema, new BuildAvroProjection(expected, renames));
+  }
+
+  public static boolean isTimestamptz(Schema schema) {
+    LogicalType logicalType = schema.getLogicalType();
+    if (logicalType != null && logicalType instanceof LogicalTypes.TimestampMicros) {
+      // timestamptz is adjusted to UTC
+      Object value = schema.getObjectProp(ADJUST_TO_UTC_PROP);
+      if (value instanceof Boolean) {
+        return (Boolean) value;
+      } else if (value instanceof String) {
+        return Boolean.parseBoolean((String) value);
+      }
+    }
+
+    return false;
   }
 
   static boolean isOptionSchema(Schema schema) {
