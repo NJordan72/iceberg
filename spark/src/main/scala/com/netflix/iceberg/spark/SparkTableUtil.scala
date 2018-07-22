@@ -16,6 +16,8 @@
 
 package com.netflix.iceberg.spark
 
+import java.nio.ByteBuffer
+
 import org.apache.hadoop.conf.Configuration
 import org.apache.hadoop.fs.Path
 
@@ -96,8 +98,8 @@ object SparkTableUtil {
       columnSizes: java.util.Map[Integer, java.lang.Long],
       valueCounts: java.util.Map[Integer, java.lang.Long],
       nullValueCounts: java.util.Map[Integer, java.lang.Long],
-      lowerBounds: java.util.Map[Integer, java.nio.ByteBuffer],
-      upperBounds: java.util.Map[Integer, java.nio.ByteBuffer]
+      lowerBounds: java.util.Map[Integer, ByteBuffer],
+      upperBounds: java.util.Map[Integer, ByteBuffer]
     ) {
 
     /**
